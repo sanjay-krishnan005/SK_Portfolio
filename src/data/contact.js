@@ -4,15 +4,17 @@ const ContactData = {
   phone: "+91 8072286139",
   email: "sanjaykrishnan437@gmail.com",
   address: "Chennai, Tamil Nadu, India",
+  // Free Web3Forms Access Key (Get yours instantly at https://web3forms.com for 100% silent background delivery)
+  web3formsKey: "",
   links: [
     {
       name: "GitHub",
-      url: "https://github.com/SanjayKrishnanS",
+      url: "https://github.com/sanjay-krishnan005",
       icon: FaGithub,
     },
     {
       name: "LinkedIn",
-      url: "https://www.linkedin.com/in/sanjay-krishnan-s",
+      url: "https://www.linkedin.com/in/sanjaykrishnanai",
       icon: FaLinkedin,
     },
     {

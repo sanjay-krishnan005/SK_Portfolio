@@ -1,102 +1,103 @@
 import React from "react";
 import { Link } from "react-scroll";
 import AboutData from "../data/about";
-import ProfileData from "../data/profile";
-import { FaBrain, FaLaptopCode, FaChartBar, FaMicrochip } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 
 const About = () => {
+
   return (
-    <section className="body-font">
-      <div className="p-5 mt-3 mx-auto md:mt-5 md:mx-10 lg:mx-16">
-        <div id="about" className="flex flex-col text-center w-full mb-3">
-          <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-black">
-            About Me
-          </h1>
-          <p
-            data-aos="zoom-in"
+    <section id="about" className="py-14 sm:py-20 lg:py-24 bg-[#121318] text-slate-100 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col items-center text-center mb-10 sm:mb-16">
+          <span
+            data-aos="fade-down"
             data-aos-duration="1000"
-            data-aos-once="false"
-            className="text-lg mx-auto leading-relaxed font-medium text-dark-orange text-center"
+            className="text-golden text-xs md:text-sm font-bold tracking-widest uppercase mb-2 bg-golden/10 px-3.5 py-1 rounded-full border border-golden/20"
           >
-            Why hire me?
-          </p>
+            Core Philosophy & Expertise
+          </span>
+          <h2
+            data-aos="zoom-in-up"
+            data-aos-duration="1100"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight"
+          >
+            About <span className="text-golden">My Work</span>
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-golden to-amber-500 rounded-full mt-3"></div>
         </div>
-        <div className="mx-auto flex lg:flex-row flex-col items-center justify-center">
+
+        {/* Two-Column Layout: Left Profile Image, Right Minimal Info & Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          {/* Left: Profile Image Destination Slot (Docking zone for TravellingProfileImage) */}
           <div
-            data-aos="zoom-in"
-            data-aos-duration="1000"
-            data-aos-once="false"
-            className="lg:max-w-lg sm:w-2/3 lg:w-1/2 w-full mb-10 md:mb-0"
+            className="lg:col-span-5 flex justify-center w-full mb-6 lg:mb-0"
           >
-            <img
-              className="object-cover object-center pointer-events-none rounded backdrop-contrast-200 backdrop-brightness-200"
-              alt="About Sanjay"
-              src={AboutData.image}
-            />
-          </div>
-          <div className="lg:w-1/2 justify-center lg:p-5 xl:p-7 md:p-5 flex flex-col items-center text-justify">
-            {AboutData.description?.map((item, index) => (
-              <p
-                key={index}
-                data-aos="zoom-in"
-                data-aos-duration="1000"
-                data-aos-once="false"
-                className="font-medium text-gray-700 text-lg lg:text-base xl:text-xl leading-loose xl:leading-8 mb-4"
-              >
-                {item}
-              </p>
-            ))}
             <div
-              data-aos="zoom-in"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="mt-7 flex gap-x-4 md:gap-x-5 justify-center md:justify-between"
+              id="about-profile-anchor"
+              className="relative w-44 h-52 sm:w-60 sm:h-72 md:w-80 md:h-[400px] lg:w-full lg:max-w-sm lg:h-[440px] rounded-3xl lg:rounded-[2.5rem] group mx-auto"
             >
-              <button className="inline-flex font-medium text-white bg-black border-2 border-black py-3 px-7 focus:outline-none hover:bg-cornsilk hover:border-dark-orange hover:text-black rounded-full text-md xl:px-10">
+              {/* Outer Golden Glow backdrop placeholder */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-golden/20 via-golden/5 to-amber-600/20 rounded-[2.5rem] blur-2xl opacity-60"></div>
+
+              {/* Invisible sizing anchor */}
+              <div className="relative rounded-[2.5rem] overflow-hidden bg-[#181924] border-2 border-golden/40 shadow-2xl shadow-black/60 h-full w-full invisible">
+                <div className="h-full w-full bg-slate-900"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Only About Me Details Text & The Two Buttons */}
+          <div
+            data-aos="fade-left"
+            data-aos-duration="1200"
+            className="lg:col-span-7 flex flex-col justify-center text-left py-4"
+          >
+            <div className="text-left">
+              <span className="text-xs font-bold uppercase tracking-widest text-golden mb-2 bg-golden/10 px-3.5 py-1 rounded-full border border-golden/20 inline-block">
+                {AboutData.heading || "About Me"}
+              </span>
+
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight mt-3 mb-4">
+                {AboutData.tagline}
+              </h3>
+
+              <div className="space-y-4 mb-8 text-left">
+                {AboutData.paragraphs?.map((para, pIdx) => (
+                  <p
+                    key={pIdx}
+                    className="text-slate-300 text-base sm:text-lg leading-relaxed font-normal text-left"
+                  >
+                    {para}
+                  </p>
+                ))}
+              </div>
+
+              {/* The Two Buttons */}
+              <div className="flex flex-wrap items-center gap-4 text-left pt-2">
                 <Link
                   to="contact"
                   spy={true}
                   smooth={true}
                   offset={-100}
-                  duration={500}
+                  duration={750}
+                  className="cursor-pointer inline-flex items-center gap-2 font-bold text-slate-950 bg-golden hover:bg-golden-light py-3 px-8 rounded-full text-sm transition-all duration-300 shadow-lg shadow-golden/20 hover:scale-105"
                 >
-                  Hire Me
+                  <span>Start a Collaboration</span>
+                  <FaArrowRight className="text-xs" />
                 </Link>
-              </button>
-              <a href={ProfileData.resume} target="_blank" rel="noreferrer">
-                <button className="inline-flex font-medium text-white bg-dark-orange border-2 border-dark-orange py-3 px-7 focus:outline-none hover:bg-cornsilk hover:border-dark-orange hover:text-black rounded-full text-md xl:px-10">
-                  Get Resume
-                </button>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Services & Expertise Section (Horizontal Layout with Icons) */}
-        <div className="mt-16 border-t border-gray-200 pt-12 max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2 justify-center md:justify-start">
-            <span className="w-1.5 h-6 bg-dark-orange rounded-full"></span>
-            Services & Expertise
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {AboutData.services?.map((service, index) => {
-              const icons = [FaBrain, FaLaptopCode, FaChartBar, FaMicrochip];
-              const IconComponent = icons[index] || FaBrain;
-              return (
-                <div
-                  key={index}
-                  data-aos="zoom-in"
-                  data-aos-duration="1000"
-                  className="bg-slate-50 border border-slate-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col items-center md:items-start text-center md:text-left"
+                <Link
+                  to="projects"
+                  spy={true}
+                  smooth={true}
+                  offset={-80}
+                  duration={750}
+                  className="cursor-pointer inline-flex items-center gap-2 font-semibold text-slate-300 hover:text-golden border border-white/10 hover:border-golden/40 bg-white/5 py-3 px-7 rounded-full text-sm transition-all hover:scale-105"
                 >
-                  <div className="text-dark-orange text-4xl mb-4 bg-orange-100/50 p-3 rounded-lg w-fit">
-                    <IconComponent />
-                  </div>
-                  <h3 className="font-bold text-gray-800 text-lg mb-2">{service.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
-                </div>
-              );
-            })}
+                  <span>View Projects &darr;</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

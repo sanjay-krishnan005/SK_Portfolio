@@ -1,46 +1,47 @@
 export const ExperienceData = [
   {
     title: "AI & ML Intern",
-    company: "IBM Skills Build (AICTE)",
-    duration: "June 2025 - July 2025",
+    company: "IBM SkillsBuild (AICTE) — Virtual",
+    duration: "Jun 2025 – Jul 2025",
     description: [
-      "Trained machine learning models and explored core deep learning concepts.",
-      "Developed predictive algorithms using Scikit-Learn and automated model analysis workflows.",
-      "Explored natural language processing fundamentals and cognitive computing tools on IBM Cloud."
+      "Developed an ML-based sales prediction solution using Python, exploratory data analysis (EDA), feature engineering, and model evaluation.",
+      "Applied hyperparameter tuning and cross-validation techniques to significantly improve model performance and generalization."
     ]
   },
   {
     title: "AI Engineer Intern",
-    company: "Sortyx Venture Private Limited",
-    duration: "March 2026 - May 2026",
+    company: "Sortyx Ventures Private Limited — Chennai",
+    duration: "Mar 2026 – Jun 2026",
     description: [
-      "Built machine learning pipelines and integrated intelligent agents with web clients.",
-      "Conducted research on Explainable AI (XAI) algorithms to improve Model interpretability.",
-      "Deployed highly optimized REST API endpoints using FastAPI and PyTorch."
+      "Developed AI automation workflows and supported SaaS product development.",
+      "Worked with NVIDIA Jetson Nano for edge-AI processing and hardware prototype development.",
+      "Built and managed AI/ML datasets, including data collection, preprocessing, and preparation pipelines.",
+      "Performed data analytics and supported AI/ML model development, testing, and validation."
     ]
   },
   {
     title: "AI Engineer",
-    company: "Sortyx Venture Private Limited",
-    duration: "June 2026 - Present",
+    company: "Sortyx Ventures Private Limited — Chennai",
+    duration: "Jun 2026 – Sep 2026",
     description: [
-      "Architect and build state-of-the-art AI SaaS solutions using LLMs and computer vision.",
-      "Develop custom MLOps pipelines for automated data ingestion, model fine-tuning, and deployment.",
-      "Collaborate with multi-disciplinary teams to integrate explainable AI features into production software."
+      "Developed AI and computer vision solutions using Python, YOLO, and OpenCV for real-world production applications.",
+      "Built the AI Intelligence & Monitoring Platform, integrating application/web development, cloud services, analytics, and monitoring.",
+      "Worked on AWS, IoT, and edge-device integration for AI-powered systems and real-time telemetry monitoring.",
+      "Contributed to end-to-end AI application and product development from model integration to deployment."
     ]
   }
 ];
 
 export const EducationData = [
   {
-    degree: "B.Tech in Artificial Intelligence and Data Science",
+    degree: "B.Tech — Artificial Intelligence & Data Science",
     institution: "Dhanalakshmi Srinivasan Engineering College",
-    duration: "2022 - 2026",
-    cgpa: "8.0 CGPA",
+    duration: "2022 – 2026",
+    cgpa: "CGPA: 8.2 / 10",
     description: [
-      "Core coursework in Machine Learning, Deep Learning, Data Structures, NLP, and Big Data Analytics.",
-      "Active participant in technical symposiums, research forums, and AI workshops.",
-      "Graduated with a focus on deploying explainable AI methodologies for real-world scenarios."
+      "Specialized in Artificial Intelligence, Deep Learning, Computer Vision, Natural Language Processing, and Data Science.",
+      "Hands-on project work in Edge AI, IoT systems, Explainable AI (XAI), and full-stack model deployment.",
+      "Active participant in national-level hackathons, technical symposiums, and startup programs."
     ]
   }
 ];

@@ -1,192 +1,369 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaPaperPlane, FaWhatsapp } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
 import SocialHandles from "./SocialHandles";
 import ContactData from "../data/contact";
 
 const Contact = () => {
   const formRef = useRef();
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionFallback, setSubmissionFallback] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(formRef.current);
     const name = formData.get("user_name");
     const email = formData.get("user_email");
+    const subject = formData.get("subject") || "Portfolio Inquiry";
     const message = formData.get("message");
-    
-    const toastId = toast.loading("Sending message...");
-    
-    fetch(`https://formsubmit.co/ajax/${ContactData.email}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        Name: name,
-        Email: email,
-        Message: message
-      })
-    })
-      .then((res) => {
-        if (res.ok) {
-          toast.update(toastId, {
-            render: "Message sent successfully!",
-            type: "success",
-            isLoading: false,
-            autoClose: 5000
-          });
-          e.target.reset();
-        } else {
-          throw new Error("Response was not OK");
-        }
-      })
-      .catch((error) => {
-        console.error("FormSubmit failure:", error);
-        toast.update(toastId, {
-          render: "Direct dispatch failed. Opening local mail client...",
-          type: "warning",
-          isLoading: false,
-          autoClose: 5000
+
+    setIsSubmitting(true);
+    setSubmissionFallback(null);
+    const toastId = toast.loading("Sending message to Sanjay...");
+
+    let sent = false;
+
+    // 1. Try Web3Forms if an access key is provided in contact.js
+    if (ContactData.web3formsKey) {
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: ContactData.web3formsKey,
+            name,
+            email,
+            subject: `[Portfolio] ${subject} - from ${name}`,
+            message,
+          }),
         });
-        
-        const subject = encodeURIComponent(`Portfolio Message from ${name}`);
-        const body = encodeURIComponent(
-          `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-        );
-        window.location.href = `mailto:${ContactData.email}?subject=${subject}&body=${body}`;
+        const data = await res.json();
+        if (data.success) {
+          sent = true;
+        }
+      } catch (err) {
+        console.warn("Web3Forms attempt error:", err);
+      }
+    }
+
+    // 2. Try FormSubmit AJAX gateway
+    if (!sent) {
+      try {
+        const res = await fetch(`https://formsubmit.co/ajax/${ContactData.email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            subject,
+            _subject: `[Portfolio] ${subject} - from ${name}`,
+            message,
+            _captcha: "false",
+            _template: "table",
+          }),
+        });
+
+        if (res.ok) {
+          const rawText = await res.text();
+          if (rawText.includes('"success":"true"') || rawText.includes('"message":')) {
+            sent = true;
+          }
+        }
+      } catch (err) {
+        console.warn("FormSubmit attempt error:", err);
+      }
+    }
+
+    setIsSubmitting(false);
+
+    if (sent) {
+      toast.update(toastId, {
+        render: "Message delivered successfully to Sanjay!",
+        type: "success",
+        isLoading: false,
+        autoClose: 5000,
       });
+      e.target.reset();
+      setSubmissionFallback(null);
+    } else {
+      // Graceful fallback: DO NOT force Windows mail app popup.
+      // Instead, present convenient 1-click web options (Gmail Web, WhatsApp, Mail)
+      toast.update(toastId, {
+        render: "Server gateway busy. Choose your instant 1-click option below!",
+        type: "info",
+        isLoading: false,
+        autoClose: 6000,
+      });
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+        ContactData.email
+      )}&su=${encodeURIComponent(`[Portfolio] ${subject} - from ${name}`)}&body=${encodeURIComponent(
+        `Hi Sanjay,\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`
+      )}`;
+
+      const whatsappText = encodeURIComponent(
+        `Hi Sanjay,\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`
+      );
+      const whatsappUrl = `https://wa.me/918072286139?text=${whatsappText}`;
+
+      const mailtoUrl = `mailto:${ContactData.email}?subject=${encodeURIComponent(
+        `[Portfolio] ${subject} - from ${name}`
+      )}&body=${encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+      )}`;
+
+      setSubmissionFallback({
+        name,
+        gmailUrl,
+        whatsappUrl,
+        mailtoUrl,
+      });
+    }
   };
 
   return (
-    <section className="text-gray-600 body-font ">
-      <div className="px-3 py-5 mx-auto text-center md:mt-7 sm:mx-7 md:mx-12 lg:mx-32 xl:mx-56">
-        <div id="contact" className="flex flex-col text-center w-full mb-4">
-          <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-black">
-            Contact Me
-          </h1>
-          <p
-            data-aos="zoom-in"
+    <section id="contact" className="py-20 bg-[#121318] text-slate-100 relative">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col items-center text-center mb-16">
+          <span
+            data-aos="fade-down"
             data-aos-duration="1000"
-            data-aos-once="false"
-            className="text-lg font-medium leading-relaxed text-dark-orange "
+            className="text-golden text-xs md:text-sm font-bold tracking-widest uppercase mb-2 bg-golden/10 px-3.5 py-1 rounded-full border border-golden/20"
           >
-            Let's keep in touch
-          </p>
+            Initiate Contact
+          </span>
+          <h2
+            data-aos="zoom-in-up"
+            data-aos-duration="1100"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight"
+          >
+            Let's <span className="text-golden">Collaborate</span>
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-golden to-amber-500 rounded-full mt-3"></div>
         </div>
-        <div className="flex flex-col gap-2 md:flex-row w-full mx-auto rounded-xl bg-darkblue p-4 md:gap-7 lg:gap-9 lg:rounded-2xl xl:gap-10">
-          <div className="p-2 w-full text-center lg:p-5 xl:p-7 md:w-1/2 lg:w-4/6">
-            <h1
-              data-aos="zoom-in-down"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="hidden md:block text-2xl lg:text-3xl text-dark-orange font-medium mb-3 lg:mb-4"
-            >
-              Get In Touch
-            </h1>
-            <div
-              data-aos="zoom-in-down"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-5 mb-4 justify-center md:mb-5"
-            >
-              <SocialHandles />
-            </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center mb-4 md:gap-2 lg:gap-5"
-            >
-              <FaPhoneAlt className="text-white" />
-              <p className="text-white md:text-lg ">{ContactData.phone}</p>
-            </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center mb-4 md:gap-2 lg:gap-5"
-            >
-              <FaEnvelope className="text-white" />
+
+        {/* Contact Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
+          {/* Left: Direct Channels */}
+          <div
+            data-aos="fade-right"
+            data-aos-duration="1000"
+            className="lg:col-span-5 flex flex-col gap-6"
+          >
+            {/* Direct Channels */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#181922]/90 border border-white/10 space-y-4 shadow-xl shadow-black/30 text-left">
+              <div className="mb-2">
+                <span className="text-golden text-xs font-bold uppercase tracking-wider">Get in Touch</span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">Direct Inquiries</h3>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  Reach out for AI/ML engineering roles, intelligent vision pipelines, IoT telemetry, or technical collaboration.
+                </p>
+              </div>
               <a
                 href={`mailto:${ContactData.email}`}
-                className="text-white md:text-lg"
+                className="flex items-center gap-4 text-left p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-golden/40 transition-all group"
               >
-                {ContactData.email}
+                <div className="w-10 h-10 rounded-lg bg-golden/10 border border-golden/30 flex items-center justify-center text-golden text-lg group-hover:scale-110 transition-transform">
+                  <FaEnvelope />
+                </div>
+                <div className="overflow-hidden">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Email</span>
+                  <p className="text-sm font-semibold text-white group-hover:text-golden transition-colors truncate">
+                    {ContactData.email}
+                  </p>
+                </div>
               </a>
-            </div>
-            <div
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              data-aos-once="false"
-              className="flex gap-3 items-center md:gap-2 lg:gap-5"
-            >
-              <FaMapMarkerAlt className="text-white" />
-              <p className="leading-normal text-start text-white md:text-lg">
-                {ContactData.address}
-              </p>
+
+              {ContactData.phone && (
+                <a
+                  href={`tel:${ContactData.phone}`}
+                  className="flex items-center gap-4 text-left p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-golden/40 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-golden/10 border border-golden/30 flex items-center justify-center text-golden text-lg group-hover:scale-110 transition-transform">
+                    <FaPhoneAlt />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Phone</span>
+                    <p className="text-sm font-semibold text-white group-hover:text-golden transition-colors">
+                      {ContactData.phone}
+                    </p>
+                  </div>
+                </a>
+              )}
+
+              <div className="flex items-center gap-4 text-left p-3.5 rounded-xl bg-white/5 border border-white/5">
+                <div className="w-10 h-10 rounded-lg bg-golden/10 border border-golden/30 flex items-center justify-center text-golden text-lg">
+                  <FaMapMarkerAlt />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Base</span>
+                  <p className="text-sm font-semibold text-white">
+                    {ContactData.address}
+                  </p>
+                </div>
+              </div>
+
+              {/* Social Channels */}
+              <div className="pt-2 flex flex-col items-center">
+                <span className="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Social Profiles</span>
+                <SocialHandles />
+              </div>
             </div>
           </div>
-          <form
-            data-aos="zoom-in-up"
+
+          {/* Right: Modern Luxury Form */}
+          <div
+            data-aos="fade-left"
             data-aos-duration="1000"
-            data-aos-once="false"
-            ref={formRef}
-            onSubmit={handleSubmit}
-            className="flex bg-whitesmoke flex-col p-2 rounded-lg md:w-1/2 md:p-4 lg:px-5 lg:py-7 lg:m-4 lg:w-3/5"
+            className="lg:col-span-7 p-8 rounded-2xl bg-[#181922]/90 border border-white/10 shadow-2xl shadow-black/40 flex flex-col justify-between"
           >
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <input
-                required
-                placeholder="Name"
-                type="text"
-                name="user_name"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-black p-2 leading-8 transition-colors duration-200 ease-in-out"
-              />
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2">Send a Direct Message</h3>
+              <p className="text-sm text-slate-400 mb-6">
+                Have a project inquiry, research collaboration, or opportunity? Fill out the details below.
+              </p>
+
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="user_name"
+                      required
+                      placeholder="e.g. John Doe"
+                      className="w-full bg-[#121318] rounded-xl border border-white/10 focus:border-golden focus:ring-1 focus:ring-golden text-white p-3.5 outline-none transition-all placeholder:text-slate-500 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                      Your Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="user_email"
+                      required
+                      placeholder="john@example.com"
+                      className="w-full bg-[#121318] rounded-xl border border-white/10 focus:border-golden focus:ring-1 focus:ring-golden text-white p-3.5 outline-none transition-all placeholder:text-slate-500 text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    name="subject"
+                    required
+                    placeholder="e.g. AI Engineering Opportunity / Project Inquiry"
+                    className="w-full bg-[#121318] rounded-xl border border-white/10 focus:border-golden focus:ring-1 focus:ring-golden text-white p-3.5 outline-none transition-all placeholder:text-slate-500 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    name="message"
+                    required
+                    rows="4"
+                    placeholder="Describe your project, role, or collaboration inquiry..."
+                    className="w-full bg-[#121318] rounded-xl border border-white/10 focus:border-golden focus:ring-1 focus:ring-golden text-white p-3.5 outline-none transition-all placeholder:text-slate-500 text-sm resize-none"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full font-bold text-slate-950 bg-golden hover:bg-golden-light disabled:opacity-50 py-3.5 px-8 rounded-full text-base transition-all duration-300 shadow-lg shadow-golden/25 hover:shadow-golden/40 hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <FaPaperPlane className="text-sm" />
+                  <span>{isSubmitting ? "Dispatching..." : "Dispatch Message"}</span>
+                </button>
+
+                {/* Instant 1-Click Fallback Card */}
+                {submissionFallback && (
+                  <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-[#14151b] border border-golden/40 shadow-xl text-left animate-fadeIn">
+                    <div className="flex items-center gap-2 text-golden text-sm font-bold mb-1.5">
+                      <span className="w-2 h-2 rounded-full bg-golden animate-ping"></span>
+                      <span>1-Click Instant Dispatch</span>
+                    </div>
+                    <p className="text-xs text-slate-300 mb-3.5 leading-relaxed">
+                      Your message has been pre-formatted for direct delivery! Select your preferred channel below to send it to Sanjay instantly:
+                    </p>
+                    <div className="flex flex-wrap gap-2.5">
+                      <a
+                        href={submissionFallback.gmailUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition-all shadow-md shadow-red-950/40 hover:scale-105"
+                      >
+                        <SiGmail className="text-sm" />
+                        <span>Send via Web Gmail</span>
+                      </a>
+                      <a
+                        href={submissionFallback.whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-md shadow-emerald-950/40 hover:scale-105"
+                      >
+                        <FaWhatsapp className="text-sm" />
+                        <span>Send via WhatsApp</span>
+                      </a>
+                      <a
+                        href={submissionFallback.mailtoUrl}
+                        className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-xs transition-all"
+                      >
+                        <FaEnvelope className="text-xs text-golden" />
+                        <span>Mail Client</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* Direct Alternative Shortcuts */}
+                <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2 border-t border-white/5">
+                  <span>Direct fast channels:</span>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(ContactData.email)}&su=${encodeURIComponent("Portfolio Collaboration Inquiry")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-slate-300 hover:text-golden transition-colors font-medium"
+                    >
+                      <SiGmail className="text-red-400 text-xs" />
+                      <span>Gmail Web</span>
+                    </a>
+                    <span className="text-white/20">•</span>
+                    <a
+                      href={`https://wa.me/918072286139?text=${encodeURIComponent("Hi Sanjay, I visited your portfolio and would like to connect!")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-slate-300 hover:text-golden transition-colors font-medium"
+                    >
+                      <FaWhatsapp className="text-emerald-400 text-xs" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <input
-                required
-                placeholder="Email"
-                type="email"
-                name="user_email"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-black p-2 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-            <div
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <textarea
-                required
-                placeholder="Message"
-                name="message"
-                className="mb-1 w-full bg-white rounded-md border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-black p-2 resize-none leading-6 transition-colors duration-200 ease-in-out"
-              ></textarea>
-            </div>
-            <div
-              data-aos="zoom-in"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="p-2 w-full"
-            >
-              <button className=" font-medium mx-auto my-3 text-white bg-dark-orange border-0 py-2 px-12 focus:outline-none hover:scale-110 hover:bg-orange-600 transition duration-500 rounded-xl text-lg">
-                Send
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </section>

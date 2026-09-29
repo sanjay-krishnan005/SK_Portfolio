@@ -13,60 +13,65 @@ const Navbar = () => {
   };
 
   return (
-    <header className="text-white body-font fixed inset-x-0 z-50 bg-darkblue">
-      <div className="mx-auto py-2 px-5 flex flex-row justify-between lg:justify-around items-center lg:py-3">
+    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-[#121318]/85 border-b border-white/10 transition-all duration-300">
+      <div className="max-w-7xl mx-auto py-3 px-5 sm:px-8 flex flex-row justify-between items-center">
+        {/* Brand Name (Only Name, SK removed) */}
         <Link
-          data-aos="fade-right"
-          data-aos-duration="1000"
-          data-aos-once="false"
           spy={true}
           smooth={true}
           offset={-100}
           duration={750}
           to="home"
-          className="flex justify-center items-center w-fit cursor-pointer"
+          className="flex flex-col text-left cursor-pointer group"
         >
-          {ProfileData.logo ? (
-            <img
-              className="w-12 h-12 ml-3 cursor-pointer scale-125 lg:scale-150"
-              src={ProfileData.logo}
-              alt={ProfileData.name}
-            />
-          ) : (
-            <span className="text-xl md:text-2xl font-bold tracking-wider text-white hover:text-dark-orange transition-colors">
-              Sanjay<span className="text-dark-orange">.S</span>
-            </span>
-          )}
+          <span className="text-lg md:text-xl font-extrabold tracking-tight text-white group-hover:text-golden transition-colors">
+            {ProfileData.name}
+          </span>
+          <span className="text-[11px] text-golden uppercase tracking-widest font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            AI Engineer
+          </span>
         </Link>
-        <nav
-          data-aos="zoom-in"
-          data-aos-duration="1000"
-          data-aos-once="false"
-          className="hidden md:mx-auto lg:flex flex-wrap items-center text-lg justify-center gap-12"
-        >
+
+        {/* Desktop Nav Links */}
+        <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
           {Navlinks.map((item) => {
             return (
               <Link
                 key={item.title}
                 spy={true}
                 smooth={true}
-                offset={-100}
+                offset={-80}
                 duration={750}
                 to={item.link}
-                className="cursor-pointer hover:text-dark-orange"
+                activeClass="text-golden font-semibold"
+                className="cursor-pointer text-slate-300 hover:text-golden transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-golden hover:after:w-full after:transition-all after:duration-300"
               >
                 {item.title}
               </Link>
             );
           })}
         </nav>
-        <div
-          data-aos="fade-left"
-          data-aos-duration="1000"
-          data-aos-once="false"
-          className="lg:hidden mr-2"
-        >
-          <button onClick={toggleMenu} className="p-2 text-white">
+
+        {/* Desktop CTA Button */}
+        <div className="hidden lg:flex items-center gap-4">
+          <a
+            href={`${process.env.PUBLIC_URL}${ProfileData.resume}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center font-bold text-slate-950 bg-golden hover:bg-golden-light transition-all duration-300 shadow-md shadow-golden/20 hover:shadow-golden/40 hover:scale-105 py-2.5 px-6 rounded-full text-sm"
+          >
+            Resume
+          </a>
+        </div>
+
+        {/* Mobile Hamburger Toggle */}
+        <div className="lg:hidden">
+          <button
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
+            className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-200 hover:text-golden transition-colors"
+          >
             {isMenuOpen ? (
               <MdClose className="h-6 w-6" />
             ) : (
@@ -74,56 +79,36 @@ const Navbar = () => {
             )}
           </button>
         </div>
-        <button
-          data-aos="fade-left"
-          data-aos-duration="1000"
-          data-aos-once="false"
-          className="hidden lg:flex items-center justify-center w-fit"
-        >
-          <a
-            href={ProfileData.resume}
-            target="_blank"
-            rel="noreferrer"
-            className="leading-none text-white bg-dark-orange py-3 px-10 rounded-lg font-medium text-lg"
-          >
-            Resume
-          </a>
-        </button>
+
+        {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
-          <div className="min-h-[calc(100vh-4rem)] absolute inset-x-0 top-16 z-50 transition-all ease-in duration-1000 lg:hidden">
-            <div
-              data-aos="zoom-in-down"
-              data-aos-duration="500"
-              data-aos-once="true"
-              className="rounded-b-lg bg-darkblue shadow-lg px-5 pb-4"
+          <div className="min-h-screen fixed inset-x-0 top-[60px] z-50 bg-[#121318]/95 backdrop-blur-xl border-b border-white/10 p-6 flex flex-col gap-6 lg:hidden animate-fade-in">
+            <nav className="flex flex-col gap-5 text-lg font-medium text-left">
+              {Navlinks.map((item) => {
+                return (
+                  <Link
+                    key={item.title}
+                    onClick={() => setIsMenuOpen(false)}
+                    spy={true}
+                    smooth={true}
+                    offset={-80}
+                    duration={750}
+                    to={item.link}
+                    className="cursor-pointer text-slate-300 hover:text-golden transition-colors py-2 border-b border-white/5"
+                  >
+                    {item.title}
+                  </Link>
+                );
+              })}
+            </nav>
+            <a
+              href={`${process.env.PUBLIC_URL}${ProfileData.resume}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-950 bg-golden hover:bg-golden-light font-bold py-3 px-8 rounded-full text-base text-center shadow-lg shadow-golden/30 mt-4"
             >
-              <nav className="flex flex-col gap-y-7 text-xl">
-                {Navlinks.map((item) => {
-                  return (
-                    <Link
-                      key={item.title}
-                      onClick={() => setIsMenuOpen(false)}
-                      spy={true}
-                      smooth={true}
-                      offset={-100}
-                      duration={750}
-                      to={item.link}
-                      className="cursor-pointer hover:text-dark-orange"
-                    >
-                      {item.title}
-                    </Link>
-                  );
-                })}
-                <a
-                  href={ProfileData.resume}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white bg-dark-orange py-2.5 px-10 rounded-lg font-medium text-lg wfit mx-auto"
-                >
-                  Resume
-                </a>
-              </nav>
-            </div>
+              Download Resume
+            </a>
           </div>
         )}
       </div>

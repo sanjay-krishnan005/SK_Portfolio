@@ -31,7 +31,7 @@ const ScrollToTopButton = () => {
       data-aos-once="true"
       className={`${
         showButton ? "fixed bottom-3 right-4" : "hidden"
-      } bg-dark-orange p-1 rounded-full text-white shadow-lg transition duration-900`}
+      } bg-golden hover:bg-golden-light p-1 rounded-full text-slate-950 shadow-lg shadow-golden/30 transition duration-300 hover:scale-110 z-50`}
     >
       <FaCircleArrowUp className="w-6 h-6 lg:w-8 lg:h-8" />
     </button>

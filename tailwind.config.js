@@ -4,10 +4,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "dark-orange": "#FF5823",
-        "cornsilk": "#fff8dc",
-        "darkblue": "#080831",
-        "whitesmoke": "#f5f5f5",
+        "dark-orange": "#D4AF37", // Radiant Metallic Gold
+        "golden": "#D4AF37",
+        "golden-light": "#F3D068",
+        "golden-dark": "#B89628",
+        "light-black": "#121318", // Sleek Charcoal / Light Black
+        "charcoal": "#181920",
+        "darkblue": "#121318", // Replaces legacy darkblue with light-black
+        "surface-dark": "#1A1B24",
+        "cornsilk": "#1E202A",
+        "whitesmoke": "#16171E",
       },
     },
   },

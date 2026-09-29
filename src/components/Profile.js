@@ -19,7 +19,7 @@ const Profile = () => {
             data-aos="fade-down"
             data-aos-duration="1000"
             data-aos-once="false"
-            className="text-dark-orange text-xs md:text-sm font-bold tracking-widest uppercase mb-2 bg-orange-500/10 px-3.5 py-1.5 rounded-full border border-orange-500/20"
+            className="text-golden text-xs md:text-sm font-bold tracking-widest uppercase mb-2 bg-golden/10 px-3.5 py-1.5 rounded-full border border-golden/30"
           >
             AI Engineer & Developer
           </span>
@@ -54,18 +54,33 @@ const Profile = () => {
             </span>
           </div>
 
-          {/* Description */}
-          {ProfileData.info?.map((item, index) => (
-            <p
-              key={index}
-              data-aos="zoom-in-up"
-              data-aos-duration="1500"
-              data-aos-once="false"
-              className="text-slate-300 text-base md:text-lg leading-relaxed mb-6 font-normal"
-            >
-              {item}
-            </p>
-          ))}
+          {/* Punchy Bio Statement */}
+          <p
+            data-aos="zoom-in-up"
+            data-aos-duration="1400"
+            data-aos-once="false"
+            className="text-slate-300 text-base md:text-lg leading-relaxed mb-6 font-normal max-w-xl"
+          >
+            {ProfileData.bio}
+          </p>
+
+          {/* Visual Highlight Badges */}
+          <div
+            data-aos="zoom-in-up"
+            data-aos-duration="1500"
+            data-aos-once="false"
+            className="flex flex-wrap gap-2.5 mb-8 justify-center lg:justify-start"
+          >
+            {ProfileData.highlights?.map((item, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-300"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-golden"></span>
+                <span>{item.value}</span>
+              </span>
+            ))}
+          </div>
 
           {/* Buttons Group */}
           <div
@@ -74,7 +89,7 @@ const Profile = () => {
             data-aos-once="false"
             className="flex flex-wrap gap-4 justify-center lg:justify-start w-full mb-6"
           >
-            <button className="inline-flex font-semibold text-white bg-dark-orange hover:bg-orange-600 border-2 border-dark-orange py-3 px-8 focus:outline-none transition-all duration-300 rounded-full text-base shadow-lg shadow-orange-500/20 hover:scale-105">
+            <button className="inline-flex font-semibold text-slate-900 bg-golden hover:bg-golden-light border-2 border-golden py-3 px-8 focus:outline-none transition-all duration-300 rounded-full text-base shadow-lg shadow-golden/30 hover:scale-105">
               <Link
                 to="contact"
                 spy={true}
@@ -85,8 +100,8 @@ const Profile = () => {
                 Hire Me
               </Link>
             </button>
-            <a href={ProfileData.resume} target="_blank" rel="noreferrer">
-              <button className="inline-flex font-semibold text-white hover:text-black bg-transparent hover:bg-white border-2 border-white hover:border-white py-3 px-8 focus:outline-none transition-all duration-300 rounded-full text-base hover:scale-105">
+            <a href={`${process.env.PUBLIC_URL}${ProfileData.resume}`} target="_blank" rel="noreferrer">
+              <button className="inline-flex font-semibold text-golden hover:text-light-black bg-transparent hover:bg-golden border-2 border-golden py-3 px-8 focus:outline-none transition-all duration-300 rounded-full text-base hover:scale-105 shadow-md shadow-golden/10 cursor-pointer">
                 Get Resume
               </button>
             </a>
@@ -104,26 +119,24 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Right Side (Profile Image Frame) */}
+        {/* Right Side (Profile Image Frame & Hero Anchor) */}
         <div
+          id="hero-profile-anchor"
           data-aos="zoom-in-up"
           data-aos-duration="1000"
           data-aos-once="false"
-          className="flex-shrink-0 order-1 lg:order-2 w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 mx-auto relative group"
+          className="flex-shrink-0 order-1 lg:order-2 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 mx-auto relative group"
         >
           {/* Decorative Offset Glow and Shadow backdrops */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-dark-orange to-indigo-600 rounded-[2.5rem] rotate-6 opacity-30 group-hover:rotate-12 transition-transform duration-500 blur-xl"></div>
-          <div className="absolute inset-0 bg-dark-orange/20 rounded-[2.5rem] -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-golden to-amber-600 rounded-[2.5rem] rotate-6 opacity-30 group-hover:rotate-12 transition-transform duration-500 blur-xl"></div>
+          <div className="absolute inset-0 bg-golden/20 rounded-[2.5rem] -rotate-3 group-hover:-rotate-6 transition-transform duration-500"></div>
 
-          {/* Main Image Squircle Container */}
-          <div className="w-full h-full rounded-[2.5rem] overflow-hidden border-2 border-white shadow-2xl relative z-10 bg-slate-800">
+          {/* Invisible sizing anchor (TravellingProfileImage renders the visual image across all screen sizes) */}
+          <div className="w-full h-full rounded-[2.5rem] overflow-hidden border-2 border-golden/80 shadow-2xl shadow-golden/20 relative z-10 bg-slate-900 invisible">
             <img
-              className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover object-center"
               alt={ProfileData.name}
               src={ProfileData.img}
-              onError={(e) => {
-                e.target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop"; // Fallback image if local profile.jpeg is missing
-              }}
             />
           </div>
         </div>

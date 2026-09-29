@@ -1,27 +1,33 @@
 const CertificationsData = [
   {
     title: "Machine Learning Specialization",
-    issuer: "DeepLearning.AI & Stanford University",
-    date: "2024",
-    skills: ["Supervised Learning", "Unsupervised Learning", "Recommender Systems"],
+    issuer: "Coursera (DeepLearning.AI / Stanford)",
+    date: "Certified Credential",
+    skills: ["Supervised Learning", "Deep Neural Networks", "Model Evaluation"],
   },
   {
-    title: "Deep Learning Specialization",
-    issuer: "DeepLearning.AI",
-    date: "2025",
-    skills: ["Neural Networks", "CNNs", "RNNs/Transformers", "Optimization"],
+    title: "Machine Learning",
+    issuer: "NPTEL (IIT)",
+    date: "Certified Credential",
+    skills: ["Statistical Learning", "Classification", "Regression Algorithms"],
   },
   {
-    title: "Data Science Professional Certificate",
-    issuer: "IBM Skills Network",
-    date: "2025",
-    skills: ["Python", "Data Analysis", "Data Visualization", "SQL"],
+    title: "Intro to SQL",
+    issuer: "Kaggle",
+    date: "Certified Credential",
+    skills: ["SQL Queries", "Relational Databases", "Data Aggregation"],
   },
   {
-    title: "Intro to SQL & Databases",
-    issuer: "Kaggle / IBM",
-    date: "2024",
-    skills: ["Relational Databases", "SQL Queries", "Data Filtering & Joins"],
+    title: "Data Science Masterclass",
+    issuer: "Udemy",
+    date: "Certified Credential",
+    skills: ["Data Analytics", "EDA", "Pandas", "Data Visualization"],
+  },
+  {
+    title: "IBM Deep Learning",
+    issuer: "Coursera (IBM)",
+    date: "Certified Credential",
+    skills: ["Deep Learning Models", "Keras", "TensorFlow", "Computer Vision"],
   },
 ];
 

@@ -4,12 +4,16 @@ const ProfileData = {
   name: "Sanjay Krishnan S",
   professions: [
     "AI Engineer",
-    "Deep Learning Practitioner",
-    "MLOps Developer",
-    "Automation Specialist"
+    "Machine Learning Specialist",
+    "Computer Vision Developer",
+    "Full-Stack AI Integrator",
+    "Generative AI & LLM Engineer"
   ],
-  info: [
-    "Focused and adaptable AI Engineer experienced in building intelligent SaaS solutions. Skilled in deep learning, NLP, and automation, with a dedicated interest in explainable AI (XAI) and real-world smart systems."
+  bio: "Architecting high-accuracy deep learning systems, real-time computer vision, and autonomous agent workflows from research to scalable production.",
+  highlights: [
+    { label: "Location", value: "Tamil Nadu, India" },
+    { label: "Status", value: "Open to Roles & Freelance" },
+    { label: "Degree", value: "B.Tech AI & DS (8.2 CGPA)" }
   ],
   resume: "/Resume.pdf"
 };
