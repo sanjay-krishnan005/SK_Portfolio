@@ -40,10 +40,10 @@ const Profile = () => {
             data-aos="zoom-in-up"
             data-aos-duration="1200"
             data-aos-once="false"
-            className="text-xl md:text-2xl text-slate-300 font-semibold mb-4 min-h-[40px] flex items-center"
+            className="text-sm sm:text-lg md:text-2xl text-slate-300 font-semibold mb-4 h-9 sm:h-11 flex items-center justify-center lg:justify-start whitespace-nowrap overflow-hidden max-w-full"
           >
-            <span>Specialized in&nbsp;</span>
-            <span className="text-white border-b-2 border-dark-orange pb-0.5 font-bold">
+            <span className="text-slate-400 text-xs sm:text-base md:text-xl font-medium shrink-0">Specialized in&nbsp;</span>
+            <span className="text-white border-b-2 border-dark-orange pb-0.5 font-bold whitespace-nowrap">
               <Typewriter
                 words={ProfileData.professions}
                 loop={false}

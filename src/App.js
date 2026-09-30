@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <div className="App min-h-screen bg-[#121318] text-slate-100 selection:bg-golden selection:text-slate-950">
+    <div className="App min-h-screen bg-[#121318] text-slate-100 selection:bg-golden selection:text-slate-950 overflow-x-hidden w-full max-w-[100vw]">
       <Navbar />
       <TravellingProfileImage />
       <Profile />
