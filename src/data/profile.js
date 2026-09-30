@@ -15,7 +15,7 @@ const ProfileData = {
     { label: "Status", value: "Open to Roles & Freelance" },
     { label: "Degree", value: "B.Tech AI & DS (8.2 CGPA)" }
   ],
-  resume: "/Resume.pdf"
+  resume: "/Sanjay_Krishnan_S.pdf"
 };
 
 export default ProfileData;
